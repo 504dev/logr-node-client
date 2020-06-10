@@ -1,11 +1,11 @@
 const os = require('os')
 const process = require('process')
+const utils = require('./utils')
 
 const hostname = os.hostname()
 const pid = process.pid
-const commit = ''//readCommit()
-const tag = ''//readTag()
-
+const commit = utils.readCommit()
+const tag = utils.readTag()
 
 class Logr {
     constructor({ udp, dashId, publicKey, privateKey, hostname = '', version }) {
@@ -20,7 +20,7 @@ class Logr {
     getPid() {
         return pid
     }
-    GetVersion() {
+    getVersion() {
         if (this.version !== '') {
             return this.version
         } else if (tag !== '') {
