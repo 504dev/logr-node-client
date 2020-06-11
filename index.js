@@ -117,7 +117,7 @@ class Logger {
     log(level, ...args) {
         const prefix = this.getPrefix(level)
         const body = this.getBody(util.formatWithOptions({colors: true}, ...args))
-        std[level].write(prefix + body)
+        std[level].write(prefix + body + '\n')
         this.writeLevel(level, body)
     }
 
