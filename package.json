@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/504dev/logr-node-client/issues"
   },
-  "homepage": "https://github.com/504dev/logr-node-client#readme"
+  "homepage": "https://github.com/504dev/logr-node-client#readme",
+  "dependencies": {
+    "chalk": "^4.1.0"
+  }
 }

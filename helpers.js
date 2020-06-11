@@ -10,9 +10,18 @@ module.exports = {
         const stdout = cp.execSync('git tag -l --points-at HEAD')
         const parts = stdout.toString().split('\n')
         if (parts.length > 1) {
-            return parts[parts.length-2]
+            return parts[parts.length - 2]
         }
         return ''
+    },
+
+    initiator() {
+        const name = new Error().stack.split('\n')[4] || ''
+        return name
+            .replace(/(.+)\((.+)\)/g, '$2')
+            .split('/')
+            .slice(-2)
+            .join('/')
     }
 }
 
