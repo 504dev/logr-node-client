@@ -40,6 +40,13 @@ class Logr {
         return pid
     }
 
+    udpParts() {
+        const splitted = this.udp.split(':')
+        const host = splitted[0] || 'localhost'
+        const port = parseInt(splitted[1]) || 7776
+        return [port, host]
+    }
+
     getVersion() {
         if (this.version) {
             return this.version
@@ -148,7 +155,7 @@ class Logger {
             cipher_log: cipherText,
         }
         const msg = JSON.stringify(logpack)
-        this.conn.send(msg, this.config.udp.port, this.config.udp.host)
+        this.conn.send(msg, ...this.config.udpParts())
     }
 
     encryptJson(data, key) {
