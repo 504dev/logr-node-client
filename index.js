@@ -24,6 +24,13 @@ const std = {
     [LevelError]: process.stderr,
 }
 
+const lvl = {
+    [LevelDebug]: chalk.blue(LevelDebug),
+    [LevelInfo]: chalk.green(LevelInfo),
+    [LevelWarn]: chalk.yellow(LevelWarn),
+    [LevelError]: chalk.red(LevelError),
+}
+
 class Logr {
     constructor({udp, dashId, publicKey, privateKey, hostname = '', version}) {
         Object.assign(this, {udp, dashId, publicKey, privateKey, hostname, version})
@@ -74,29 +81,14 @@ class Logger {
     }
 
     getPrefix(level) {
-        const dt = new Date().toISOString()
-        let flevel = level
-        switch (level) {
-            case LevelDebug:
-                flevel = chalk.blue(level)
-                break
-            case LevelInfo:
-                flevel = chalk.green(level)
-                break
-            case LevelWarn:
-                flevel = chalk.yellow(level)
-                break
-            case LevelError:
-                flevel = chalk.red(level)
-                break
-        }
         let res = this.prefix
-        res = res.replace('{time}', dt)
-        res = res.replace('{level}', flevel)
+        res = res.replace('{time}', new Date().toISOString())
+        res = res.replace('{level}', lvl[level])
         return res
     }
 
-    getBody(msg) {
+    getBody(...args) {
+        const msg = util.formatWithOptions({colors: true}, ...args)
         let res = this.body
         res = res.replace('{version}', this.config.getVersion())
         res = res.replace('{pid}', this.config.getPid())
@@ -123,31 +115,23 @@ class Logger {
 
     log(level, ...args) {
         const prefix = this.getPrefix(level)
-        const body = this.getBody(util.formatWithOptions({colors: true}, ...args))
+        const body = this.getBody(...args)
         std[level].write(prefix + body + '\n')
-        this.writeLevel(level, body)
+        this.send(level, body)
     }
 
-    blankLog() {
-        return {
+    send(level, message) {
+        const log = {
             logname: this.logname,
             timestamp: Date.now() * 1e6,
             dashId: this.config.dashId,
             hostname: this.config.getHostname(),
             pid: this.config.getPid(),
             version: this.config.getVersion(),
+            level,
+            message
         }
-    }
 
-    writeLevel(level, msg) {
-        const log = this.blankLog()
-        log.level = level
-        log.message = msg
-
-        return this.writeLog(log)
-    }
-
-    writeLog(log) {
         const cipherText = this.encryptJson(log, this.config.privateKey)
         const logpack = {
             dash_id: this.config.dashId,
