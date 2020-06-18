@@ -6,7 +6,7 @@ const conf = new Logr({
     privateKey: 'MC0CAQACBQDIOyKzAgMBAAECBQCHaZwRAgMA0nkCAwDziwIDAL+xAgJMKwICGq0=',
 })
 
-const logger = conf.newLogger('node')
+const logger = conf.newLogger('hello.log')
 
 logger.info('Hello, Logr!')
-logger.counter.inc('test')
+logger.counter.inc('greeting')
