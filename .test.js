@@ -9,3 +9,4 @@ const conf = new Logr({
 const logger = conf.newLogger('node')
 
 logger.info('Hello, Logr!')
+logger.counter.inc('test')

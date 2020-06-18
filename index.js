@@ -46,6 +46,10 @@ class Logr {
     newLogger(logname) {
         return new Logger(this, logname)
     }
+
+    newCounter(name) {
+        return new Counter(this, name)
+    }
 }
 
 module.exports = {Logr}

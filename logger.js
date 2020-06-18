@@ -4,6 +4,7 @@ const util = require('util')
 const process = require('process')
 const helpers = require('./helpers')
 const aes = require('./aes')
+const {Counter} = require('./Counter')
 
 const LevelDebug = 'debug'
 const LevelInfo = 'info'
@@ -32,6 +33,8 @@ class Logger {
         this.logname = logname
         this.prefix = '{time} {level} '
         this.body = '[{version}, pid={pid}, {initiator}] {message}'
+        this.counter = new Counter(config, logname)
+        this.counter.run(10 * 1000)
     }
 
     getPrefix(level) {
@@ -86,7 +89,7 @@ class Logger {
             message
         }
 
-        const cipherText = this.encryptJson(log, this.config.privateKey)
+        const cipherText = aes.encryptJson(log, this.config.privateKey)
         const logpack = {
             dash_id: this.config.dashId,
             public_key: this.config.publicKey,
@@ -95,17 +98,6 @@ class Logger {
         const msg = JSON.stringify(logpack)
         this.conn.send(msg, ...this.config.udpParts())
     }
-
-    encryptJson(data, key) {
-        const text = JSON.stringify(data)
-        return aes.encrypt(text, key)
-    }
-
-    decryptJson(text, key) {
-        const json = aes.decrypt(text, key)
-        return JSON.parse(json)
-    }
-
 }
 
 module.exports = {Logger}

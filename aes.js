@@ -20,5 +20,15 @@ module.exports = {
         let decrypted = decipher.update(encryptedText)
         decrypted = Buffer.concat([decrypted, decipher.final()])
         return decrypted.toString()
+    },
+
+    encryptJson(data, key) {
+        const text = JSON.stringify(data)
+        return this.encrypt(text, key)
+    },
+
+    decryptJson(text, key) {
+        const json = this.decrypt(text, key)
+        return JSON.parse(json)
     }
 }
