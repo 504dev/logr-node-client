@@ -1,10 +1,10 @@
 const udp = require('dgram')
 const aes = require('./aes')
-const {Count} = require('./Count')
+const {Count} = require('./count')
 
 class Counter {
     constructor(config, logname) {
-        this.conn = udp.createSocket('udp4')
+        this.conn = null
         this.config = config
         this.logname = logname
         this.tmp = {}
@@ -12,6 +12,7 @@ class Counter {
     }
 
     run(interval) {
+        this.conn = udp.createSocket('udp4')
         this.timer = setInterval(() => this.flush(), interval)
     }
 
@@ -34,18 +35,19 @@ class Counter {
         this.conn.send(msg, ...this.config.udpParts())
     }
 
-
-    touch(key) {
-        if (!this.tmp[key]) {
-            this.tmp[key] = new Count({
-                dashId: this.config.dashId,
-                hostname: this.config.getHostname(),
-                logname: this.logname,
-                keyname: key,
-                version: this.config.getVersion(),
-            })
+    blank() {
+        return {
+            hostname: this.config.getHostname(),
+            logname: this.logname,
+            version: this.config.getVersion(),
         }
-        return this.tmp[key]
+    }
+
+    touch(keyname) {
+        if (!this.tmp[keyname]) {
+            this.tmp[keyname] = new Count({ ...this.blank(), keyname })
+        }
+        return this.tmp[keyname]
     }
 
     inc(key, num) {
@@ -70,6 +72,16 @@ class Counter {
 
     time(key, d) {
         return this.touch(key).time(d)
+    }
+
+    widget(kind, keyname, length){
+        return JSON.stringify({
+            widget: 'counter',
+            ...this.blank(),
+            keyname,
+            kind,
+            length
+        })
     }
 }
 

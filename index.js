@@ -1,7 +1,8 @@
 const os = require('os')
 const process = require('process')
 const helpers = require('./helpers')
-const { Logger } = require('./logger')
+const {Logger} = require('./logger')
+const {Counter} = require('./counter')
 
 const hostname = os.hostname()
 const pid = process.pid

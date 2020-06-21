@@ -4,7 +4,7 @@ const util = require('util')
 const process = require('process')
 const helpers = require('./helpers')
 const aes = require('./aes')
-const {Counter} = require('./Counter')
+const {Counter} = require('./counter')
 
 const LevelDebug = 'debug'
 const LevelInfo = 'info'
