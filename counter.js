@@ -74,13 +74,13 @@ class Counter {
         return this.touch(key).time(d)
     }
 
-    widget(kind, keyname, length){
+    widget(kind, keyname, limit){
         return JSON.stringify({
             widget: 'counter',
             ...this.blank(),
             keyname,
             kind,
-            length
+            limit
         })
     }
 }
