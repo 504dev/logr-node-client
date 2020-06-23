@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/504dev/logr-node-client#readme",
   "dependencies": {
-    "chalk": "^4.1.0"
+    "chalk": "^4.1.0",
+    "node-os-utils": "^1.3.0"
   }
 }

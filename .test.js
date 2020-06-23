@@ -10,4 +10,5 @@ const logger = conf.newLogger('hello.log')
 
 logger.counter.inc('greeting')
 logger.info('Hello, Logr!')
-logger.info('Its Widget %s Bro! Its Widget Bro! Its Widget Bro!\nIts Widget Bro! Its Widget Bro!' , conf.newCounter('crypto.log').widget('max', 'price:BTC_USDT', 30))
+logger.info('Its Widget %s Bro!', conf.newCounter('crypto.log').snippet('max', 'price:BTC_USDT', 30))
+logger.counter.watchSystem()

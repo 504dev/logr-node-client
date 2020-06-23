@@ -34,7 +34,6 @@ class Logger {
         this.prefix = '{time} {level} '
         this.body = '[{version}, pid={pid}, {initiator}] {message}'
         this.counter = new Counter(config, logname)
-        this.counter.run(10 * 1000)
     }
 
     getPrefix(level) {

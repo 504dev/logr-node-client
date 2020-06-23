@@ -1,4 +1,5 @@
 const udp = require('dgram')
+const osu = require('node-os-utils')
 const aes = require('./aes')
 const {Count} = require('./count')
 
@@ -9,6 +10,7 @@ class Counter {
         this.logname = logname
         this.tmp = {}
         this.timer = null
+        this.run(20 * 1000)
     }
 
     run(interval) {
@@ -22,6 +24,13 @@ class Counter {
             this.send(count)
         }
         this.tmp = {}
+    }
+
+    stop() {
+        this.flush()
+        if (this.timer) {
+            clearInterval(this.timer)
+        }
     }
 
     send(count) {
@@ -45,7 +54,7 @@ class Counter {
 
     touch(keyname) {
         if (!this.tmp[keyname]) {
-            this.tmp[keyname] = new Count({ ...this.blank(), keyname })
+            this.tmp[keyname] = new Count({...this.blank(), keyname})
         }
         return this.tmp[keyname]
     }
@@ -74,7 +83,7 @@ class Counter {
         return this.touch(key).time(d)
     }
 
-    widget(kind, keyname, limit){
+    snippet(kind, keyname, limit) {
         return JSON.stringify({
             widget: 'counter',
             ...this.blank(),
@@ -82,6 +91,21 @@ class Counter {
             kind,
             limit
         })
+    }
+
+    watchSystem() {
+        setInterval(async () => {
+            const [l, c, d, m] = await Promise.all([
+                osu.cpu.loadavg(),
+                osu.cpu.usage(),
+                osu.drive.info(),
+                osu.mem.info(),
+            ])
+            this.avg('la', l[0])
+            this.per('cpu', c, 100)
+            this.per('disk', +d.usedGb, +d.totalGb)
+            this.per('mem', m.usedMemMb, m.totalMemMb)
+        }, 2 * 1000)
     }
 }
 
