@@ -10,12 +10,18 @@ class Counter {
         this.logname = logname
         this.tmp = {}
         this.timer = null
-        this.run(20 * 1000)
+    }
+
+    connect() {
+        if (!this.conn) {
+            this.conn = udp.createSocket('udp4')
+        }
     }
 
     run(interval) {
-        this.conn = udp.createSocket('udp4')
-        this.timer = setInterval(() => this.flush(), interval)
+        if (!this.timer) {
+            this.timer = setInterval(() => this.flush(), interval)
+        }
     }
 
     flush() {
@@ -31,6 +37,7 @@ class Counter {
         if (this.timer) {
             clearInterval(this.timer)
         }
+
     }
 
     send(count) {
@@ -53,6 +60,8 @@ class Counter {
     }
 
     touch(keyname) {
+        this.connect()
+        this.run(20 * 1000)
         if (!this.tmp[keyname]) {
             this.tmp[keyname] = new Count({...this.blank(), keyname})
         }
