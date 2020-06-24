@@ -4,7 +4,7 @@ module.exports = {
     readCommit() {
         let stdout
         try {
-            stdout = cp.execSync('git rev-parse HEAD')
+            stdout = cp.execSync('git rev-parse HEAD', {stdio: 'pipe'})
             return stdout.toString()
         } catch (e) {
             return ''
@@ -15,7 +15,7 @@ module.exports = {
     readTag() {
         let stdout
         try {
-            stdout = cp.execSync('git tag -l --points-at HEAD')
+            stdout = cp.execSync('git tag -l --points-at HEAD', {stdio: 'pipe'})
         } catch (e) {
             return ''
         }
