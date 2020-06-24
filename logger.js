@@ -80,7 +80,6 @@ class Logger {
         const log = {
             logname: this.logname,
             timestamp: Date.now() * 1e6,
-            dashId: this.config.dashId,
             hostname: this.config.getHostname(),
             pid: this.config.getPid(),
             version: this.config.getVersion(),
@@ -90,7 +89,6 @@ class Logger {
 
         const cipherText = aes.encryptJson(log, this.config.privateKey)
         const logpack = {
-            dash_id: this.config.dashId,
             public_key: this.config.publicKey,
             cipher_log: cipherText,
         }

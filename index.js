@@ -10,8 +10,8 @@ const commit = helpers.readCommit()
 const tag = helpers.readTag()
 
 class Logr {
-    constructor({udp, dashId, publicKey, privateKey, hostname = '', version}) {
-        Object.assign(this, {udp, dashId, publicKey, privateKey, hostname, version})
+    constructor({udp, publicKey, privateKey, hostname = '', version}) {
+        Object.assign(this, {udp, publicKey, privateKey, hostname, version})
     }
 
     getHostname() {
