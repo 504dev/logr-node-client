@@ -86,7 +86,11 @@ class Logger {
             level,
             message
         }
+        return this._send(log)
+    }
 
+    _send(log) {
+        log = _.pick(log, ['timestamp', 'logname', 'hostname', 'pid', 'version', 'level', 'message'])
         const cipherText = aes.encryptJson(log, this.config.privateKey)
         const logpack = {
             public_key: this.config.publicKey,
