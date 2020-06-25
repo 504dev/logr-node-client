@@ -1,3 +1,4 @@
+const _ = require('lodash')
 const udp = require('dgram')
 const chalk = require('chalk')
 const util = require('util')
