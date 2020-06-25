@@ -76,21 +76,26 @@ class Logger {
         this.send(level, body)
     }
 
-    send(level, message) {
-        const log = {
+    blank(level = LevelInfo, message = '') {
+        return {
+            timestamp: Date.now(),
             logname: this.logname,
-            timestamp: Date.now() * 1e6,
             hostname: this.config.getHostname(),
             pid: this.config.getPid(),
             version: this.config.getVersion(),
             level,
             message
         }
+    }
+
+    send(level, message) {
+        const log = this.blank(level, message)
         return this._send(log)
     }
 
     _send(log) {
         log = _.pick(log, ['timestamp', 'logname', 'hostname', 'pid', 'version', 'level', 'message'])
+        log.timestamp = new Date(log.timestamp) * 1e6
         const cipherText = aes.encryptJson(log, this.config.privateKey)
         const logpack = {
             public_key: this.config.publicKey,
