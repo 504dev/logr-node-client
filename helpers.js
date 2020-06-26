@@ -27,7 +27,8 @@ module.exports = {
     },
 
     initiator() {
-        const name = new Error().stack.split('\n')[4] || ''
+        const {stack} = new Error()
+        const name = stack.split('\n')[5] || ''
         return name
             .replace(/(.+)\((.+)\)/g, '$2')
             .split('/')
