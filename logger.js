@@ -7,24 +7,29 @@ const helpers = require('./helpers')
 const aes = require('./aes')
 const {Counter} = require('./counter')
 
-const LevelDebug = 'debug'
-const LevelInfo = 'info'
-const LevelWarn = 'warn'
-const LevelError = 'error'
+const {LevelDebug, LevelInfo, LevelWarn, LevelError} = require('./levels')
 
-const std = {
-    [LevelDebug]: process.stdout,
-    [LevelInfo]: process.stdout,
-    [LevelWarn]: process.stderr,
-    [LevelError]: process.stderr,
-}
+const std = new Proxy({}, {
+    get: function (target, prop) {
+        return {
+            [LevelDebug]: process.stdout,
+            [LevelInfo]: process.stdout,
+            [LevelWarn]: process.stderr,
+            [LevelError]: process.stderr,
+        }[prop] || process.stdout
+    }
+})
 
-const lvl = {
-    [LevelDebug]: chalk.blue(LevelDebug),
-    [LevelInfo]: chalk.green(LevelInfo),
-    [LevelWarn]: chalk.yellow(LevelWarn),
-    [LevelError]: chalk.red(LevelError),
-}
+const lvl = new Proxy({}, {
+    get: function (target, prop) {
+        return {
+            [LevelDebug]: chalk.blue(LevelDebug),
+            [LevelInfo]: chalk.green(LevelInfo),
+            [LevelWarn]: chalk.yellow(LevelWarn),
+            [LevelError]: chalk.red(LevelError),
+        }[prop] || chalk.grey(prop)
+    }
+})
 
 
 class Logger {
@@ -104,6 +109,10 @@ class Logger {
         }
         const msg = JSON.stringify(logpack)
         this.conn.send(msg, ...this.config.udpParts())
+    }
+
+    close() {
+        this.conn.close()
     }
 }
 

@@ -28,7 +28,14 @@ module.exports = {
 
     initiator() {
         const {stack} = new Error()
-        const name = stack.split('\n')[5] || ''
+        const lines = stack.split('\n')
+        let name
+        for (let i = lines.length - 1; i >= 0; i--) {
+            if (lines[i].includes('at Logger.')) {
+                name = lines[i + 1] || ''
+                break
+            }
+        }
         return name
             .replace(/(.+)\((.+)\)/g, '$2')
             .split('/')
