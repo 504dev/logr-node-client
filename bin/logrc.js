@@ -12,20 +12,37 @@ program
     .requiredOption('--pub <string>', 'set public key')
     .requiredOption('--priv <string>', 'set private key')
     .requiredOption('--logname <string>', 'set logname')
-    .requiredOption('--message <string>', 'set log message')
-    .option('--level <string>', 'set log level', LevelInfo)
     .version(version, '-v, --version')
 
 program
-    .action(async () => {
+    .command('log')
+    .description('send log')
+    .requiredOption('--message <string>', 'set log message')
+    .option('--level <string>', 'set log level', LevelInfo)
+    .action(async (opts) => {
         const conf = new Logr({
             udp: program.udp,
             publicKey: program.pub,
             privateKey: program.priv,
         })
         const logger = conf.newLogger(program.logname)
-        logger.log(program.level, program.message)
+        logger.log(opts.level, opts.message)
         setTimeout(() => logger.close())
+    })
+
+program
+    .command('count <type> <keyname> [x] [y]')
+    .description('send count')
+    .action(async (type, keyname, x, y) => {
+        const conf = new Logr({
+            udp: program.udp,
+            publicKey: program.pub,
+            privateKey: program.priv,
+        })
+        const counter = conf.newCounter(program.logname)
+        counter[type](keyname, x, y)
+        counter.stop()
+        setTimeout(() => counter.close())
     })
 
 program.parse(process.argv)

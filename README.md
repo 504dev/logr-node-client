@@ -50,22 +50,36 @@ logger.info('Its Widget %s Bro!', logger.counter.snippet('inc', 'greeting', 30))
 ### Install
     npm i logr-node-client -g
 
-### Options
-     --udp <string>      set udp address (default: "127.0.0.1:7776")
-     --pub <string>      set public key
-     --priv <string>     set private key
-     --logname <string>  set logname
-     --message <string>  set log message
-     --level <string>    set log level (default: "info")
-     -v, --version       output the version number
-     -h, --help          display help for command
+### Usage
+    Options:
+      --udp <string>                  set udp address (default: "127.0.0.1:7776")
+      --pub <string>                  set public key
+      --priv <string>                 set private key
+      --logname <string>              set logname
+      -v, --version                   output the version number
+      -h, --help                      display help for command
+
+    Commands:
+      log [options]                   send log
+      count <type> <keyname> [x] [y]  send count
+      help [command]                  display help for command
+
 
 ### Example
 
 ```bash
-logrc --pub="MCAwDQYJKoZIhvcNAQEBBQADDwAwDAIFAMg7IrMCAwEAAQ=="
-      --priv="MC0CAQACBQDIOyKzAgMBAAECBQCHaZwRAgMA0nkCAwDziwIDAL+xAgJMKwICGq0="
-      --logname="hello.log"
-      --message="Privet"
-      --level=debug
+logrc log --pub="MCAwDQYJKoZIhvcNAQEBBQADDwAwDAIFAMg7IrMCAwEAAQ==" \
+          --priv="MC0CAQACBQDIOyKzAgMBAAECBQCHaZwRAgMA0nkCAwDziwIDAL+xAgJMKwICGq0=" \
+          --logname="hello.log" \
+          --level=debug \
+          --message="Privet"
+
+```
+```bash
+logrc count --pub="MCAwDQYJKoZIhvcNAQEBBQADDwAwDAIFAMg7IrMCAwEAAQ==" \
+            --priv="MC0CAQACBQDIOyKzAgMBAAECBQCHaZwRAgMA0nkCAwDziwIDAL+xAgJMKwICGq0=" \
+            --logname="hello.log" \
+            inc \
+            greeting \
+            5
 ```

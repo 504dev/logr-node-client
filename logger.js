@@ -112,7 +112,9 @@ class Logger {
     }
 
     close() {
-        this.conn.close()
+        if (this.conn) {
+            this.conn.close()
+        }
     }
 }
 

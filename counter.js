@@ -40,6 +40,12 @@ class Counter {
 
     }
 
+    close() {
+        if (this.conn) {
+            this.conn.close()
+        }
+    }
+
     send(count) {
         const cipherText = aes.encryptJson(count, this.config.privateKey)
         const lp = {
@@ -113,7 +119,7 @@ class Counter {
             this.per('cpu', c, 100)
             this.per('disk', +d.usedGb, +d.totalGb)
             this.per('mem', m.usedMemMb, m.totalMemMb)
-        }, 2 * 1000)
+        }, 20 * 1000)
     }
 }
 
