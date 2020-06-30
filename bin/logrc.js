@@ -31,16 +31,27 @@ program
     })
 
 program
-    .command('count <type> <keyname> [x] [y]')
+    .command('count <kind> <keyname> [x] [y]')
     .description('send count')
-    .action(async (type, keyname, x, y) => {
+    .action(async (kind, keyname, x, y) => {
+        x = typeof x === 'undefined' ? x : parseFloat(x)
+        y = typeof y === 'undefined' ? y : parseFloat(y)
+        if (x !== x || y !== y) { // check NaN
+            console.error('Error: X and Y must be a number')
+            return
+        }
+        const kinds = ['inc', 'min', 'max', 'avg', 'per', 'time']
+        if (!kinds.includes(kind)) {
+            console.error(`Error: Unknown kind «${kind}» (use ${kinds})`)
+            return
+        }
         const conf = new Logr({
             udp: program.udp,
             publicKey: program.pub,
             privateKey: program.priv,
         })
         const counter = conf.newCounter(program.logname)
-        counter[type](keyname, x, y)
+        counter[kind](keyname, x, y)
         counter.stop()
         setTimeout(() => counter.close())
     })

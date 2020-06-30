@@ -61,7 +61,7 @@ logger.info('Its Widget %s Bro!', logger.counter.snippet('inc', 'greeting', 30))
 
     Commands:
       log [options]                   send log
-      count <type> <keyname> [x] [y]  send count
+      count <kind> <keyname> [x] [y]  send count
       help [command]                  display help for command
 
 
