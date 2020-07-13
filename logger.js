@@ -101,7 +101,7 @@ class Logger {
 
     _send(log) {
         log = _.pick(log, ['timestamp', 'logname', 'hostname', 'pid', 'version', 'level', 'message'])
-        log.timestamp = new Date(log.timestamp) * 1e6
+        log.timestamp = String(new Date(log.timestamp) * 1e6)
         const cipherText = aes.encryptJson(log, this.config.privateKey)
         const logpack = {
             public_key: this.config.publicKey,
