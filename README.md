@@ -26,6 +26,8 @@
 ### Example
 
 ```javascript
+const { Logr } = require('logr-node-client')
+
 const conf = new Logr({
     udp: ':7776',
     publicKey: 'MCAwDQYJKoZIhvcNAQEBBQADDwAwDAIFAMg7IrMCAwEAAQ==',

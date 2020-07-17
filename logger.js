@@ -1,5 +1,5 @@
 const _ = require('lodash')
-const udp = require('dgram')
+const dgram = require('dgram')
 const chalk = require('chalk')
 const util = require('util')
 const process = require('process')
@@ -34,7 +34,7 @@ const lvl = new Proxy({}, {
 
 class Logger {
     constructor(config, logname) {
-        this.conn = udp.createSocket('udp4')
+        this.conn = config.udp ? dgram.createSocket('udp4') : null
         this.config = config
         this.logname = logname
         this.prefix = '{time} {level} '
@@ -95,6 +95,9 @@ class Logger {
     }
 
     send(level, message) {
+        if (!this.conn) {
+            return false
+        }
         const log = this.blank(level, message)
         return this._send(log)
     }
@@ -108,7 +111,7 @@ class Logger {
             cipher_log: cipherText,
         }
         const msg = JSON.stringify(logpack)
-        this.conn.send(msg, ...this.config.udpParts())
+        return this.conn.send(msg, ...this.config.udpParts())
     }
 
     close() {
