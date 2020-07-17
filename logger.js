@@ -7,15 +7,19 @@ const helpers = require('./helpers')
 const aes = require('./aes')
 const {Counter} = require('./counter')
 
-const {LevelDebug, LevelInfo, LevelWarn, LevelError} = require('./levels')
+const {LevelDebug, LevelInfo, LevelNotice, LevelWarn, LevelError, LevelCrit, LevelAlert, LevelEmerg} = require('./levels')
 
 const std = new Proxy({}, {
     get: function (target, prop) {
         return {
-            [LevelDebug]: process.stdout,
-            [LevelInfo]: process.stdout,
-            [LevelWarn]: process.stderr,
+            [LevelEmerg]: process.stderr,
+            [LevelAlert]: process.stderr,
+            [LevelCrit]: process.stderr,
             [LevelError]: process.stderr,
+            [LevelWarn]: process.stderr,
+            [LevelNotice]: process.stdout,
+            [LevelInfo]: process.stdout,
+            [LevelDebug]: process.stdout,
         }[prop] || process.stdout
     }
 })
@@ -23,10 +27,14 @@ const std = new Proxy({}, {
 const lvl = new Proxy({}, {
     get: function (target, prop) {
         return {
-            [LevelDebug]: chalk.blue(LevelDebug),
-            [LevelInfo]: chalk.green(LevelInfo),
-            [LevelWarn]: chalk.yellow(LevelWarn),
+            [LevelEmerg]: chalk.red.bold(LevelEmerg),
+            [LevelAlert]: chalk.red.bold(LevelAlert),
+            [LevelCrit]: chalk.red.bold(LevelCrit),
             [LevelError]: chalk.red(LevelError),
+            [LevelWarn]: chalk.yellow(LevelWarn),
+            [LevelNotice]: chalk.green.bold(LevelNotice),
+            [LevelInfo]: chalk.green(LevelInfo),
+            [LevelDebug]: chalk.blue(LevelDebug),
         }[prop] || chalk.grey(prop)
     }
 })
@@ -59,20 +67,36 @@ class Logger {
         return res
     }
 
-    debug(...v) {
-        this.log(LevelDebug, ...v)
+    emerg(...v) {
+        this.log(LevelEmerg, ...v)
     }
 
-    info(...v) {
-        this.log(LevelInfo, ...v)
+    alert(...v) {
+        this.log(LevelAlert, ...v)
+    }
+
+    crit(...v) {
+        this.log(LevelCrit, ...v)
+    }
+
+    error(...v) {
+        this.log(LevelError, ...v)
     }
 
     warn(...v) {
         this.log(LevelWarn, ...v)
     }
 
-    error(...v) {
-        this.log(LevelError, ...v)
+    notice(...v) {
+        this.log(LevelNotice, ...v)
+    }
+
+    info(...v) {
+        this.log(LevelInfo, ...v)
+    }
+
+    debug(...v) {
+        this.log(LevelDebug, ...v)
     }
 
     log(level, ...args) {

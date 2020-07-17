@@ -1,6 +1,10 @@
 module.exports = {
-    LevelDebug: 'debug',
-    LevelInfo: 'info',
-    LevelWarn: 'warn',
+    LevelEmerg: 'emerg',
+    LevelAlert: 'alert',
+    LevelCrit: 'crit',
     LevelError: 'error',
+    LevelWarn: 'warn',
+    LevelNotice: 'notice',
+    LevelInfo: 'info',
+    LevelDebug: 'debug',
 }
