@@ -124,8 +124,9 @@ class Counter {
             this.per('disk', +d.usedGb, +d.totalGb)
             this.per('mem', m.usedMemMb, m.totalMemMb)
             if (typeof n === 'object') {
-                this.avg('net:in', n.inputMb * minuteInterval / netstatInterval)
-                this.avg('net:out', n.outputMb * minuteInterval / netstatInterval)
+                const { inputMb, outputMb } = n.total
+                this.avg('net:in', inputMb * minuteInterval / netstatInterval)
+                this.avg('net:out', outputMb * minuteInterval / netstatInterval)
             }
             if (typeof f === 'number') {
                 this.avg('openfd', f)
