@@ -47,7 +47,7 @@ class Counter {
     }
 
     send(count) {
-        const cipherText = aes.encryptJson(count, this.config.privateKey)
+        const cipherText = aes.encryptJson(count, this.config.privateHash)
         const lp = {
             public_key: this.config.publicKey,
             cipher_count: cipherText,

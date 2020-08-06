@@ -1,4 +1,5 @@
 const os = require('os')
+const crypto = require('crypto')
 const process = require('process')
 const helpers = require('./helpers')
 const {Logger} = require('./logger')
@@ -12,6 +13,7 @@ const tag = helpers.readTag()
 class Logr {
     constructor({udp = '', publicKey = '', privateKey = '', hostname = '', version} = {}) {
         Object.assign(this, {udp, publicKey, privateKey, hostname, version})
+        this.privateHash = crypto.createHash('sha256').update(privateKey, 'base64').digest()
     }
 
     getHostname() {
