@@ -109,16 +109,27 @@ class Counter {
 
     watchSystem() {
         setInterval(async () => {
-            const [l, c, d, m] = await Promise.all([
+            const minuteInterval = 60 * 1000
+            const netstatInterval = 5 * 1000
+            const [l, c, d, m, n, f] = await Promise.all([
                 osu.cpu.loadavg(),
                 osu.cpu.usage(),
                 osu.drive.info(),
                 osu.mem.info(),
+                osu.netstat.inOut(netstatInterval).catch(() => null),
+                osu.openfiles.openFd().catch(() => null)
             ])
             this.avg('la', l[0])
             this.per('cpu', c, 100)
             this.per('disk', +d.usedGb, +d.totalGb)
             this.per('mem', m.usedMemMb, m.totalMemMb)
+            if (typeof n === 'object') {
+                this.avg('net:in', n.inputMb * minuteInterval / netstatInterval)
+                this.avg('net:out', n.outputMb * minuteInterval / netstatInterval)
+            }
+            if (typeof f === 'number') {
+                this.avg('openfd', f)
+            }
         }, 20 * 1000)
     }
 }
