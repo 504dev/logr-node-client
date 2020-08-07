@@ -42,7 +42,8 @@ const lvl = new Proxy({}, {
 
 class Logger {
     constructor(config, logname) {
-        this.conn = config.udp ? dgram.createSocket('udp4') : null
+        // this.conn = config.udp ? dgram.createSocket('udp4') : null
+        this.pool = config.udp ? _.times(10, () => dgram.createSocket('udp4')) : null
         this.config = config
         this.logname = logname
         this.prefix = '{time} {level} '
@@ -119,7 +120,8 @@ class Logger {
     }
 
     send(level, message) {
-        if (!this.conn) {
+        // if (!this.conn) {
+        if (!this.pool) {
             return false
         }
         const log = this.blank(level, message)
@@ -135,12 +137,16 @@ class Logger {
             cipher_log: cipherText,
         }
         const msg = JSON.stringify(logpack)
-        return this.conn.send(msg, ...this.config.udpParts())
+        // return this.conn.send(msg, ...this.config.udpParts())
+        return _.sample(this.pool).send(msg, ...this.config.udpParts())
     }
 
     close() {
-        if (this.conn) {
-            this.conn.close()
+        // if (this.conn) {
+        //     this.conn.close()
+        // }
+        if (this.pool) {
+            this.pool.map(conn => conn.close())
         }
     }
 }
