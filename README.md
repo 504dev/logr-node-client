@@ -7,14 +7,18 @@
 
     npm i logr-node-client
 
-### Available `logger` functions
+### Available `logger` methods
 
+* `logger.emerg`
+* `logger.alert`
+* `logger.crit`
 * `logger.error`
 * `logger.warn`
+* `logger.notice`
 * `logger.info`
 * `logger.debug`
 
-### Available `counter` functions
+### Available `counter` methods
 
 * `counter.inc`
 * `counter.avg`
@@ -22,6 +26,7 @@
 * `counter.min`
 * `counter.per`
 * `counter.time`
+* `counter.snippet` bonus method!
 
 ### Example
 
