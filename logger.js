@@ -5,9 +5,10 @@ const util = require('util')
 const process = require('process')
 const helpers = require('./helpers')
 const aes = require('./aes')
-const {Counter} = require('./counter')
+const { Counter } = require('./counter')
 
-const {LevelDebug, LevelInfo, LevelNotice, LevelWarn, LevelError, LevelCrit, LevelAlert, LevelEmerg} = require('./levels')
+const { levels, weights } = require('./levels')
+const { LevelDebug, LevelInfo, LevelNotice, LevelWarn, LevelError, LevelCrit, LevelAlert, LevelEmerg } = levels
 
 const std = new Proxy({}, {
     get: function (target, prop) {
@@ -41,7 +42,7 @@ const lvl = new Proxy({}, {
 
 
 class Logger {
-    constructor(config, logname) {
+    constructor(config, logname, level = LevelDebug) {
         // this.conn = config.udp ? dgram.createSocket('udp4') : null
         this.pool = config.udp ? _.times(10, () => dgram.createSocket('udp4')) : null
         this.config = config
@@ -49,6 +50,7 @@ class Logger {
         this.prefix = '{time} {level} '
         this.body = '[{version}, pid={pid}, {initiator}] {message}'
         this.counter = new Counter(config, logname)
+        this.level = level
     }
 
     getPrefix(level) {
@@ -104,7 +106,9 @@ class Logger {
         const prefix = this.getPrefix(level)
         const body = this.getBody(...args)
         std[level].write(prefix + body + '\n')
-        this.send(level, body)
+        if (weights[level] >= weights[this.level]) {
+            this.send(level, body)
+        }
     }
 
     blank(level = LevelInfo, message = '') {

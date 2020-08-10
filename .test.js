@@ -1,5 +1,5 @@
 const {Logr} = require('./index')
-const levels = require('./levels')
+const { levels } = require('./levels')
 
 const conf = new Logr({
     udp: ':7776',
@@ -7,7 +7,7 @@ const conf = new Logr({
     privateKey: 'MC0CAQACBQDIOyKzAgMBAAECBQCHaZwRAgMA0nkCAwDziwIDAL+xAgJMKwICGq0=',
 })
 
-const logger = conf.newLogger('hello.log')
+const logger = conf.newLogger('hello.log', levels.LevelDebug)
 
 for (const key in levels) {
     const level = levels[key]

@@ -46,8 +46,8 @@ class Logr {
         }
     }
 
-    newLogger(logname) {
-        return new Logger(this, logname)
+    newLogger(logname, level) {
+        return new Logger(this, logname, level)
     }
 
     newCounter(name) {
