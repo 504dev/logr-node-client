@@ -106,9 +106,7 @@ class Logger {
         const prefix = this.getPrefix(level)
         const body = this.getBody(...args)
         std[level].write(prefix + body + '\n')
-        if (weights[level] >= weights[this.level]) {
-            this.send(level, body)
-        }
+        this.send(level, body)
     }
 
     blank(level = LevelInfo, message = '') {
@@ -124,6 +122,9 @@ class Logger {
     }
 
     send(level, message) {
+        if (weights[level] < weights[this.level]) {
+            return
+        }
         // if (!this.conn) {
         if (!this.pool) {
             return false
