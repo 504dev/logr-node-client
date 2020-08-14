@@ -47,7 +47,7 @@ class Count {
         return this
     }
 
-    per(taken, total) {
+    per(taken, total = 0) {
         this.now()
         if (typeof this.metrics.per_ttl === 'undefined') {
             this.metrics.per_tkn = 0
@@ -58,9 +58,9 @@ class Count {
         return this
     }
 
-    time(dutarion = 1e6) {
+    time(duration = 1e6) {
         this.now()
-        this.metrics.time = dutarion
+        this.metrics.time = duration
         const ts = Date.now()
         let delta
         return () => {

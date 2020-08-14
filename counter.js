@@ -37,7 +37,6 @@ class Counter {
         if (this.timer) {
             clearInterval(this.timer)
         }
-
     }
 
     close() {
@@ -97,7 +96,7 @@ class Counter {
         return this.touch(key).time(d)
     }
 
-    snippet(kind, keyname, limit) {
+    snippet(kind, keyname, limit = 30) {
         return JSON.stringify({
             widget: 'counter',
             ...this.blank(),
