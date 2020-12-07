@@ -8,7 +8,7 @@ const conf = new Logr({
 })
 
 Promise.resolve().then(async () => {
-    const logger = conf.newLogger('hello.log', levels.LevelDebug)
+    const logger = conf.newLogger('hello.log', levels.LevelDebug, true)
 
     for (const key in levels) {
         const level = levels[key]

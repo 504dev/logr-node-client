@@ -44,7 +44,7 @@ const lvl = new Proxy({}, {
 class Logger {
     constructor(config, logname, level = LevelDebug, terminal = true) {
         // this.conn = config.udp ? dgram.createSocket('udp4') : null
-        this.pool = config.udp ? _.times(10, () => dgram.createSocket('udp4')) : null
+        this.pool = config.udp ? _.times(3, () => dgram.createSocket('udp4')) : null
         this.config = config
         this.logname = logname
         this.prefix = '{time} {level} '
@@ -104,6 +104,9 @@ class Logger {
     }
 
     log(level, ...args) {
+        if (weights[level] < weights[this.level]) {
+            return
+        }
         const body = this.getBody(...args)
         if (this.terminal) {
             const prefix = this.getPrefix(level)
@@ -125,9 +128,6 @@ class Logger {
     }
 
     send(level, message) {
-        if (weights[level] < weights[this.level]) {
-            return
-        }
         // if (!this.conn) {
         if (!this.pool) {
             return false
