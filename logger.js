@@ -103,9 +103,11 @@ class Logger {
     }
 
     log(level, ...args) {
-        const prefix = this.getPrefix(level)
         const body = this.getBody(...args)
-        std[level].write(prefix + body + '\n')
+        if (this.config.console) {
+            const prefix = this.getPrefix(level)
+            std[level].write(prefix + body + '\n')
+        }
         this.send(level, body)
     }
 

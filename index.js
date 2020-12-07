@@ -11,8 +11,8 @@ const commit = helpers.readCommit()
 const tag = helpers.readTag()
 
 class Logr {
-    constructor({udp = '', publicKey = '', privateKey = '', hostname = '', version} = {}) {
-        Object.assign(this, {udp, publicKey, privateKey, hostname, version})
+    constructor({udp = '', publicKey = '', privateKey = '', hostname = '', version, console = true} = {}) {
+        Object.assign(this, {udp, publicKey, privateKey, hostname, version, console })
         this.privateHash = crypto.createHash('sha256').update(privateKey, 'base64').digest()
     }
 
