@@ -42,7 +42,7 @@ const lvl = new Proxy({}, {
 
 
 class Logger {
-    constructor(config, logname, level = LevelDebug, terminal = true) {
+    constructor(config, logname, { level = LevelDebug, console = true } = {}) {
         // this.conn = config.udp ? dgram.createSocket('udp4') : null
         this.pool = config.udp ? _.times(3, () => dgram.createSocket('udp4')) : null
         this.config = config
@@ -51,17 +51,17 @@ class Logger {
         this.body = '[{version}, pid={pid}, {initiator}] {message}'
         this.counter = new Counter(config, logname)
         this.level = level
-        this.terminal = terminal
+        this.terminal = console
     }
 
-    getPrefix(level) {
+    _getPrefix(level) {
         let res = this.prefix
         res = res.replace('{time}', new Date().toISOString())
         res = res.replace('{level}', lvl[level])
         return res
     }
 
-    getBody(...args) {
+    _getBody(...args) {
         const msg = util.formatWithOptions({colors: true}, ...args)
         let res = this.body
         res = res.replace('{version}', this.config.getVersion())
@@ -107,15 +107,28 @@ class Logger {
         if (weights[level] < weights[this.level]) {
             return
         }
-        const body = this.getBody(...args)
         if (this.terminal) {
-            const prefix = this.getPrefix(level)
-            std[level].write(prefix + body + '\n')
+            this.console(level, ...args)
         }
-        this.send(level, body)
+        // if (!this.conn) {
+        if (this.pool) {
+            this.udp(level, ...args)
+        }
     }
 
-    blank(level = LevelInfo, message = '') {
+    console(level, ...args) {
+        const prefix = this._getPrefix(level)
+        const body = this._getBody(...args)
+        std[level].write(prefix + body + '\n')
+    }
+
+    udp(level, ...args) {
+        const body = this._getBody(...args)
+        const log = this._blank(level, body)
+        return this._send(log)
+    }
+
+    _blank(level = LevelInfo, message = '') {
         return {
             timestamp: Date.now(),
             logname: this.logname,
@@ -125,15 +138,6 @@ class Logger {
             level,
             message
         }
-    }
-
-    send(level, message) {
-        // if (!this.conn) {
-        if (!this.pool) {
-            return false
-        }
-        const log = this.blank(level, message)
-        return this._send(log)
     }
 
     _send(log) {
