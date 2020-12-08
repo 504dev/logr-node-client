@@ -31,7 +31,7 @@
 ### Example
 
 ```javascript
-const { Logr } = require('logr-node-client')
+const { Logr, Levels } = require('logr-node-client');
 
 const conf = new Logr({
     udp: ':7776',
@@ -40,10 +40,12 @@ const conf = new Logr({
 });
 
 const logger = conf.newLogger('hello.log');
+logger.setLevel(Levels.LevelInfo)
 
 // Send log
 logger.info('Hello, Logr!');
-logger.debug('It`s cool!');
+logger.debug({ logger });
+logger.notice('It`s cool!');
 
 // Counter usage
 logger.counter.inc('greeting', 5);
