@@ -2,7 +2,7 @@
 
 const program = require('commander')
 const {Logr} = require('../index')
-const {LevelInfo} = require('../levels')
+const {Levels} = require('../levels')
 
 
 let {version} = require('../package')
@@ -18,7 +18,7 @@ program
     .command('log')
     .description('send log')
     .requiredOption('--message <string>', 'set log message')
-    .option('--level <string>', 'set log level', LevelInfo)
+    .option('--level <string>', 'set log level', Levels.LevelDebug)
     .action(async (opts) => {
         const conf = new Logr({
             udp: program.udp,

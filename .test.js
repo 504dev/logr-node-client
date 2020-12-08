@@ -1,5 +1,5 @@
 const {Logr} = require('./index')
-const { levels } = require('./levels')
+const {Levels} = require('./levels')
 
 const conf = new Logr({
     udp: ':7776',
@@ -8,10 +8,11 @@ const conf = new Logr({
 })
 
 Promise.resolve().then(async () => {
-    const logger = conf.newLogger('hello.log', { level: levels.LevelDebug, console: true })
+    const logger = conf.newLogger('hello.log', {level: Levels.LevelDebug, console: true})
+    logger.setLevel(Levels.LevelNotice)
 
-    for (const key in levels) {
-        const level = levels[key]
+    for (const key in Levels) {
+        const level = Levels[key]
         logger.log(level, 'Hello, Logr!')
     }
 

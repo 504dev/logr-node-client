@@ -1,4 +1,4 @@
-const levels = {
+const Levels = {
     LevelEmerg: 'emerg',
     LevelAlert: 'alert',
     LevelCrit: 'crit',
@@ -9,17 +9,17 @@ const levels = {
     LevelDebug: 'debug',
 }
 
-const weights = {
-    [levels.LevelEmerg]: 7,
-    [levels.LevelAlert]: 6,
-    [levels.LevelCrit]: 5,
-    [levels.LevelError]: 4,
-    [levels.LevelWarn]: 3,
-    [levels.LevelNotice]: 2,
-    [levels.LevelInfo]: 1,
-    [levels.LevelDebug]: 0,
+const Weights = {
+    [Levels.LevelEmerg]: 7,
+    [Levels.LevelAlert]: 6,
+    [Levels.LevelCrit]: 5,
+    [Levels.LevelError]: 4,
+    [Levels.LevelWarn]: 3,
+    [Levels.LevelNotice]: 2,
+    [Levels.LevelInfo]: 1,
+    [Levels.LevelDebug]: 0,
 }
 
 module.exports = {
-    levels, weights
+    Levels, Weights
 }
