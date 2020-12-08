@@ -40,18 +40,23 @@ const conf = new Logr({
 });
 
 const logger = conf.newLogger('hello.log');
-logger.setLevel(Levels.LevelInfo)
+logger.setLevel(Levels.LevelInfo);
 
-// Send log
+// Logging
 logger.info('Hello, Logr!');
-logger.debug({ logger });
+logger.debug({ logger }); // level 'debug' will be ignored
 logger.notice('It`s cool!');
 
 // Counter usage
+logger.counter.watchSystem(); // watch load average, cpu, memory, disk
 logger.counter.inc('greeting', 5);
 
 // Counter snippet example
-logger.info('Its Widget %s Bro!', logger.counter.snippet('inc', 'greeting', 30))
+logger.info('Its Widget %s Bro!', logger.counter.snippet('inc', 'greeting', 30));
+
+// Disable console output
+logger.consoleOff();
+logger.info('this message will not be printed to the console');
 ```
 
 ## Command line usage
