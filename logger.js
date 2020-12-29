@@ -40,6 +40,20 @@ const lvl = new Proxy({}, {
     }
 })
 
+const now = (() => {
+    let timestamp = Date.now()
+    let order = 0
+    return () => {
+        const now = Date.now()
+        if (now > timestamp) {
+            timestamp = now
+            order = 0
+        } else {
+            order += 1
+        }
+        return { timestamp, order }
+    }
+})()
 
 class Logger {
     constructor(config, logname, options = {}) {
@@ -136,8 +150,10 @@ class Logger {
     }
 
     _blank(level = LevelInfo, message = '') {
+        const { timestamp, order } = now()
         return {
-            timestamp: Date.now(),
+            timestamp,
+            order,
             logname: this.logname,
             hostname: this.config.getHostname(),
             pid: this.config.getPid(),
@@ -148,8 +164,11 @@ class Logger {
     }
 
     _send(log) {
+        const { timestamp, order = 0 } = log
+        log.timestamp = new Date(timestamp).getTime() + '000000'
+        log.timestamp = order.toString().padStart(log.timestamp.length, log.timestamp)
+        console.log(timestamp, order, log.timestamp)
         log = _.pick(log, ['timestamp', 'logname', 'hostname', 'pid', 'version', 'level', 'message'])
-        log.timestamp = String(new Date(log.timestamp) * 1e6)
         const cipherText = aes.encryptJson(log, this.config.privateHash)
         const logpack = {
             public_key: this.config.publicKey,

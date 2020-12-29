@@ -7,16 +7,16 @@
 
     npm i logr-node-client
 
-### Available `logger` methods
+### Available `logr` methods
 
-* `logger.emerg`
-* `logger.alert`
-* `logger.crit`
-* `logger.error`
-* `logger.warn`
-* `logger.notice`
-* `logger.info`
-* `logger.debug`
+* `logr.emerg`
+* `logr.alert`
+* `logr.crit`
+* `logr.error`
+* `logr.warn`
+* `logr.notice`
+* `logr.info`
+* `logr.debug`
 
 ### Available `counter` methods
 
@@ -39,24 +39,24 @@ const conf = new Logr({
     privateKey: 'MC0CAQACBQDIOyKzAgMBAAECBQCHaZwRAgMA0nkCAwDziwIDAL+xAgJMKwICGq0=',
 });
 
-const logger = conf.newLogger('hello.log');
-logger.setLevel(Levels.LevelInfo);
+const logr = conf.newLogger('hello.log');
+logr.setLevel(Levels.LevelInfo);
 
 // Logging
-logger.info('Hello, Logr!');
-logger.debug({ logger }); // level 'debug' will be ignored
-logger.notice('It`s cool!');
+logr.info('Hello, Logr!');
+logr.debug({ logr }); // level 'debug' will be ignored
+logr.notice('It`s cool!');
 
 // Counter usage
-logger.counter.watchSystem(); // watch load average, cpu, memory, disk
-logger.counter.inc('greeting', 5);
+logr.counter.watchSystem(); // watch load average, cpu, memory, disk
+logr.counter.inc('greeting', 5);
 
 // Counter snippet example
-logger.info('Its Widget %s Bro!', logger.counter.snippet('inc', 'greeting', 30));
+logr.info('Its Widget %s Bro!', logr.counter.snippet('inc', 'greeting', 30));
 
 // Disable console output
-logger.consoleOff();
-logger.info('this message will not be printed to the console');
+logr.consoleOff();
+logr.info('this message will not be printed to the console');
 ```
 
 ## Command line usage
