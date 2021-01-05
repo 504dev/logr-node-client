@@ -167,13 +167,15 @@ class Logger {
         const { timestamp, order = 0 } = log
         log.timestamp = new Date(timestamp).getTime() + '000000'
         log.timestamp = order.toString().padStart(log.timestamp.length, log.timestamp)
-        console.log(timestamp, order, log.timestamp)
-        log = _.pick(log, ['timestamp', 'logname', 'hostname', 'pid', 'version', 'level', 'message'])
-        const cipherText = aes.encryptJson(log, this.config.privateHash)
         const logpack = {
             public_key: this.config.publicKey,
-            cipher_log: cipherText,
+            log: _.pick(log, ['timestamp', 'logname', 'hostname', 'pid', 'version', 'level', 'message'])
         }
+        if (!this.config.noCipher) {
+            logpack.cipher_log = aes.encryptJson(logpack.log, this.config.privateHash)
+            delete logpack.log
+        }
+
         const msg = JSON.stringify(logpack)
         // return this.conn.send(msg, ...this.config.udpParts())
         return _.sample(this.pool).send(msg, ...this.config.udpParts())

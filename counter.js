@@ -46,10 +46,13 @@ class Counter {
     }
 
     send(count) {
-        const cipherText = aes.encryptJson(count, this.config.privateHash)
         const lp = {
             public_key: this.config.publicKey,
-            cipher_count: cipherText,
+            count
+        }
+        if (!this.config.noCipher) {
+            lp.cipher_count = aes.encryptJson(count, this.config.privateHash)
+            delete lp.count
         }
         const msg = JSON.stringify(lp)
         this.conn.send(msg, ...this.config.udpParts())
