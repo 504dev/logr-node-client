@@ -57,8 +57,8 @@ const now = (() => {
 
 class Logger {
     constructor(config, logname, options = {}) {
-        // this.conn = config.udp ? dgram.createSocket('udp4') : null
-        this.pool = config.udp ? _.times(3, () => dgram.createSocket('udp4')) : null
+        this.conn = config.udp ? dgram.createSocket('udp4') : null
+        // this.pool = config.udp ? _.times(3, () => dgram.createSocket('udp4')) : null
         this.config = config
         this.logname = logname
         this.prefix = '{time} {level} '
@@ -131,8 +131,8 @@ class Logger {
         if (this.options.console) {
             this.console(level, ...args)
         }
-        // if (!this.conn) {
-        if (this.pool) {
+        if (!this.conn) {
+        // if (this.pool) {
             this.udp(level, ...args)
         }
     }
@@ -167,6 +167,7 @@ class Logger {
         const { timestamp, order = 0 } = log
         log.timestamp = new Date(timestamp).getTime() + '000000'
         log.timestamp = order.toString().padStart(log.timestamp.length, log.timestamp)
+        console.log(log.timestamp)
         const logpack = {
             public_key: this.config.publicKey,
             log: _.pick(log, ['timestamp', 'logname', 'hostname', 'pid', 'version', 'level', 'message'])
@@ -177,17 +178,17 @@ class Logger {
         }
 
         const msg = JSON.stringify(logpack)
-        // return this.conn.send(msg, ...this.config.udpParts())
-        return _.sample(this.pool).send(msg, ...this.config.udpParts())
+        return this.conn.send(msg, ...this.config.udpParts())
+        // return _.sample(this.pool).send(msg, ...this.config.udpParts())
     }
 
     close() {
-        // if (this.conn) {
-        //     this.conn.close()
-        // }
-        if (this.pool) {
-            this.pool.map(conn => conn.close())
+        if (this.conn) {
+            this.conn.close()
         }
+        // if (this.pool) {
+        //     this.pool.map(conn => conn.close())
+        // }
     }
 }
 
