@@ -131,7 +131,7 @@ class Logger {
         if (this.options.console) {
             this.console(level, ...args)
         }
-        if (!this.conn) {
+        if (this.conn) {
         // if (this.pool) {
             this.udp(level, ...args)
         }
