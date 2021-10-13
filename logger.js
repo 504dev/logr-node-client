@@ -125,13 +125,12 @@ class Logger {
     }
 
     log(level, ...args) {
-        if (Weights[level] < Weights[this.options.level]) {
-            return
-        }
-        if (this.options.console) {
+        const consoleLevel = this.options.consoleLevel || this.options.level
+        const udpLevel = this.options.udpLevel || this.options.level
+        if (this.options.console && Weights[level] >= Weights[consoleLevel]) {
             this.console(level, ...args)
         }
-        if (this.conn) {
+        if (this.conn && Weights[level] >= Weights[udpLevel]) {
         // if (this.pool) {
             this.udp(level, ...args)
         }
@@ -167,7 +166,6 @@ class Logger {
         const { timestamp, order = 0 } = log
         log.timestamp = new Date(timestamp).getTime() + '000000'
         log.timestamp = order.toString().padStart(log.timestamp.length, log.timestamp)
-        console.log(log.timestamp)
         const logpack = {
             public_key: this.config.publicKey,
             log: _.pick(log, ['timestamp', 'logname', 'hostname', 'pid', 'version', 'level', 'message'])
