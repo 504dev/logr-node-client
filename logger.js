@@ -124,6 +124,10 @@ class Logger {
         this.log(LevelDebug, ...v)
     }
 
+    delta(ts) {
+        return (Date.now() - ts) / 1000
+    }
+
     log(level, ...args) {
         const consoleLevel = this.options.consoleLevel || this.options.level
         const udpLevel = this.options.udpLevel || this.options.level
