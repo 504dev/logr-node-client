@@ -1,4 +1,5 @@
 const _ = require('lodash')
+const crypto = require('crypto')
 const dgram = require('dgram')
 const chalk = require('chalk')
 const util = require('util')
@@ -6,9 +7,12 @@ const process = require('process')
 const helpers = require('./helpers')
 const aes = require('./aes')
 const { Counter } = require('./counter')
+const { Logpack } = require('./logpack')
 
 const { Levels, Weights } = require('./levels')
 const { LevelDebug, LevelInfo, LevelNotice, LevelWarn, LevelError, LevelCrit, LevelAlert, LevelEmerg } = Levels
+
+const MAX_MESSAGE_SIZE = 9000
 
 const std = new Proxy({}, {
     get: function (target, prop) {
@@ -170,17 +174,21 @@ class Logger {
         const { timestamp, order = 0 } = log
         log.timestamp = new Date(timestamp).getTime() + '000000'
         log.timestamp = order.toString().padStart(log.timestamp.length, log.timestamp)
-        const logpack = {
+        const logpack = new Logpack({
             public_key: this.config.publicKey,
             log: _.pick(log, ['timestamp', 'logname', 'hostname', 'pid', 'version', 'level', 'message'])
-        }
-        if (!this.config.noCipher) {
-            logpack.cipher_log = aes.encryptJson(logpack.log, this.config.privateHash)
-            delete logpack.log
+        })
+        if (this.config.noCipher) {
+            logpack.serializeLog()
+        } else {
+            logpack.cipherLog(this.config.privateHash)
         }
 
-        const msg = JSON.stringify(logpack)
-        return this.conn.send(msg, ...this.config.udpParts())
+        const chunks = logpack.chunkify(MAX_MESSAGE_SIZE, this.config.privateHash)
+
+        for (const chunk of chunks) {
+            this.conn.send(chunk, ...this.config.udpParts())
+        }
         // return _.sample(this.pool).send(msg, ...this.config.udpParts())
     }
 

@@ -1,8 +1,13 @@
 const crypto = require('crypto')
 
 module.exports = {
-    encrypt(text, key) {
-        const iv = crypto.randomBytes(16)
+    encrypt(text, key, iv) {
+        if (!iv) {
+            iv = crypto.randomBytes(16)
+        } else {
+            const salt = crypto.createHash('sha256').update(iv).digest()
+            iv = salt.slice(0, 16)
+        }
         let cipher = crypto.createCipheriv('aes-256-cfb', key, iv)
         let encrypted = cipher.update(text)
         encrypted = Buffer.concat([encrypted, cipher.final()])
