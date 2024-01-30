@@ -20,6 +20,4 @@ const Weights = {
     [Levels.LevelDebug]: 0,
 }
 
-module.exports = {
-    Levels, Weights
-}
+module.exports = { Levels, Weights }

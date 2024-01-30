@@ -74,4 +74,4 @@ class Count {
     }
 }
 
-module.exports = {Count}
+module.exports = { Count }

@@ -2,9 +2,9 @@ const os = require('os')
 const crypto = require('crypto')
 const process = require('process')
 const helpers = require('./helpers')
-const {Logger} = require('./logger')
-const {Counter} = require('./counter')
-const {Levels} = require('./levels')
+const { Logger } = require('./logger')
+const { Counter } = require('./counter')
+const { Levels } = require('./levels')
 
 const hostname = os.hostname()
 const pid = process.pid
@@ -56,4 +56,4 @@ class Logr {
     }
 }
 
-module.exports = {Logr, Levels}
+module.exports = { Logr, Levels }

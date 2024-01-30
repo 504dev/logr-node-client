@@ -1,15 +1,13 @@
 const _ = require('lodash')
-const crypto = require('crypto')
 const dgram = require('dgram')
 const chalk = require('chalk')
 const util = require('util')
 const process = require('process')
 const helpers = require('./helpers')
-const aes = require('./aes')
 const { Counter } = require('./counter')
 const { Logpack } = require('./logpack')
-
 const { Levels, Weights } = require('./levels')
+
 const { LevelDebug, LevelInfo, LevelNotice, LevelWarn, LevelError, LevelCrit, LevelAlert, LevelEmerg } = Levels
 
 const MAX_MESSAGE_SIZE = 9000
@@ -202,4 +200,4 @@ class Logger {
     }
 }
 
-module.exports = {Logger}
+module.exports = { Logger }

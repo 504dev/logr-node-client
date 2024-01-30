@@ -1,5 +1,5 @@
-const {Logr} = require('./index')
-const {Levels} = require('./levels')
+const { Logr } = require('./index')
+const { Levels } = require('./levels')
 
 const conf = new Logr({
     udp: ':7776',

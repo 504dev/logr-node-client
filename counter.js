@@ -1,7 +1,7 @@
 const udp = require('dgram')
 const osu = require('node-os-utils')
 const aes = require('./aes')
-const {Count} = require('./count')
+const { Count } = require('./count')
 
 class Counter {
     constructor(config, logname) {
@@ -137,4 +137,4 @@ class Counter {
     }
 }
 
-module.exports = {Counter}
+module.exports = { Counter }

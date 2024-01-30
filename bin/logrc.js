@@ -1,11 +1,10 @@
 #!/usr/bin/env node
 
 const program = require('commander')
-const {Logr} = require('../index')
-const {Levels} = require('../levels')
+const { Logr } = require('../index')
+const { Levels } = require('../levels')
 
-
-let {version} = require('../package')
+let { version } = require('../package')
 
 program
     .option('--udp <string>', 'set udp address', /:/, '127.0.0.1:7776')
