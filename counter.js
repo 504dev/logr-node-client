@@ -109,6 +109,15 @@ class Counter {
         })
     }
 
+    watchProcess() {
+        setInterval(async () => {
+            const mu = process.memoryUsage()
+            for (const key in mu) {
+                this.avg(`process.memoryUsage().${key}`, mu[key])
+            }
+        }, 20 * 1000)
+    }
+
     watchSystem() {
         setInterval(async () => {
             const minuteInterval = 60 * 1000

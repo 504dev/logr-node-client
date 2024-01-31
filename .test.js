@@ -24,6 +24,7 @@ Promise.resolve().then(async () => {
     logger.counter.inc('greeting')
     logger.info('Its Widget %s Bro!', conf.newCounter('crypto.log').snippet('max', 'price:BTC_USDT', 30))
     logger.counter.watchSystem()
+    logger.counter.watchProcess()
 
     const delta = logger.counter.time('response')
     await sleep(1000)
