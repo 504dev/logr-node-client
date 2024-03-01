@@ -136,8 +136,8 @@ class Counter {
             this.per('mem', m.usedMemMb, m.totalMemMb)
             if (typeof n === 'object') {
                 const { inputMb, outputMb } = n.total
-                this.avg('netIn', inputMb * minuteInterval / netstatInterval)
-                this.avg('netOut', outputMb * minuteInterval / netstatInterval)
+                this.avg('netIn', inputMb * 1e6 * (minuteInterval / netstatInterval))
+                this.avg('netOut', outputMb * 1e6 * (minuteInterval / netstatInterval))
             }
             if (typeof f === 'number') {
                 this.avg('openFd', f)
