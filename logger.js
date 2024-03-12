@@ -187,16 +187,22 @@ class Logger {
         for (const chunk of chunks) {
             this.conn.send(chunk, ...this.config.udpParts())
         }
-        // return _.sample(this.pool).send(msg, ...this.config.udpParts())
+    }
+
+    stop() {
+        this.counter.stop()
     }
 
     close() {
         if (this.conn) {
             this.conn.close()
         }
-        // if (this.pool) {
-        //     this.pool.map(conn => conn.close())
-        // }
+        this.counter.close()
+    }
+
+    gracefulStop() {
+        this.stop()
+        this.close()
     }
 }
 

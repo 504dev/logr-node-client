@@ -11,18 +11,17 @@ class Logpack {
     this.sign(uid, 0, 1, privateHash)
 
     const msg = JSON.stringify(this)
-    const buf = Buffer.from(msg)
 
-    if (buf.length <= size) {
+    if (msg.length <= size) {
       return [msg]
     }
 
     const data = this.cipher_log || this._log
 
-    const headSize = buf.length - data.length
+    const headSize = msg.length - data.length
     const chunkSize = size - headSize
 
-    const chunks = Logpack.chunkifyString(data, chunkSize)
+    const chunks = Logpack.chunkifyBuff(data, chunkSize)
 
     return chunks.map((chunk, i) => {
       const lpi = new Logpack({ ...this })
@@ -58,10 +57,13 @@ class Logpack {
     return buffer.toString('base64').slice(0, length)
   }
 
-  static chunkifyString(input, length) {
+  static chunkifyBuff(input, length) {
     const result = []
+    input = Buffer.from(input, 'base64')
+    length = Math.floor(length * 0.749)
     for (let i = 0; i < input.length; i += length) {
-      result.push(input.slice(i, i + length))
+      const chunk = input.slice(i, i + length)
+      result.push(chunk.toString('base64'))
     }
     return result
   }

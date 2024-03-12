@@ -37,6 +37,12 @@ class Counter {
         if (this.timer) {
             clearInterval(this.timer)
         }
+        if (this.timerProcess) {
+            clearInterval(this.timerProcess)
+        }
+        if (this.timerSystem) {
+            clearInterval(this.timerSystem)
+        }
     }
 
     close() {
@@ -68,7 +74,7 @@ class Counter {
 
     touch(keyname) {
         this.connect()
-        this.run(20 * 1000)
+        this.run(20_000)
         if (!this.tmp[keyname]) {
             this.tmp[keyname] = new Count({...this.blank(), keyname})
         }
@@ -110,18 +116,18 @@ class Counter {
     }
 
     watchProcess() {
-        setInterval(async () => {
+        this.timerProcess = setInterval(async () => {
             const mu = process.memoryUsage()
             for (const key in mu) {
                 this.avg(`process.memoryUsage().${key}`, mu[key])
             }
-        }, 20 * 1000)
+        }, 20_000)
     }
 
     watchSystem() {
-        setInterval(async () => {
-            const minuteInterval = 60 * 1000
-            const netstatInterval = 5 * 1000
+        this.timerSystem = setInterval(async () => {
+            const minuteInterval = 60_000
+            const netstatInterval = 5_000
             const [l, c, d, m, n, f] = await Promise.all([
                 osu.cpu.loadavg(),
                 osu.cpu.usage(),
@@ -142,7 +148,7 @@ class Counter {
             if (typeof f === 'number') {
                 this.avg('openFd', f)
             }
-        }, 20 * 1000)
+        }, 20_000)
     }
 }
 

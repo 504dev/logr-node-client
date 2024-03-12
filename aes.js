@@ -15,11 +15,11 @@ module.exports = {
     },
 
     decrypt(text, key) {
-        let encryptedText = Buffer.from(text, 'base64')
-        const iv = encryptedText.slice(0, 16)
-        encryptedText = encryptedText.slice(16)
+        let encryptedBuff = Buffer.from(text, 'base64')
+        const iv = encryptedBuff.slice(0, 16)
+        encryptedBuff = encryptedBuff.slice(16)
         let decipher = crypto.createDecipheriv('aes-256-cfb', key, iv)
-        let decrypted = decipher.update(encryptedText)
+        let decrypted = decipher.update(encryptedBuff)
         decrypted = Buffer.concat([decrypted, decipher.final()])
         return decrypted.toString()
     },
